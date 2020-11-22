@@ -10,8 +10,8 @@ import sys
 import requests
 import datetime
 import json
-import base64
-import argparse
+import redis
+from threading import Timer
 
 from bert_process import Process
 
@@ -20,13 +20,9 @@ def demo(url):
     url = '{}/{}'.format(url, 'TextHandler')
     date = str(datetime.datetime.now())
     start = time.time()
-    texts = ['好贵啊', '我的头']
-    data = '-'.join(texts)
-    r = requests.post(url, headers={'time': date}, data={'texts': data}, timeout=5)
-    end = time.time()
-    j = json.loads(r.text)
-    print('Recv: {}:{}'.format(j['type'], j['result']))
-    print('Echo data: {}'.format(j['data']))
+    r = requests.post(url, headers={'time': date}, data={'texts': '我杀父查岗苏晨'}, timeout=5)
+    end=time.time()
+    print(r.text)
     end2 = time.time()
     print('time cost', end - start, 's')
     print('time cost', end2 - start, 's')
@@ -36,7 +32,7 @@ def test1():
     pro = Process()
     time_start = time.time()
 
-    data = pro.request_json(['好贵啊', '我的头'])
+    data = pro.request_json(['好贵啊', '我的'])
 
     headers = {"content-type": "application/json"}
 
@@ -49,9 +45,8 @@ def test1():
     print('time cost', time_end - time_start, 's')
 
 
-# data = json.dumps(['好贵啊', '我的头'])
-# json_response = requests.post('http://hostlocal:8889/chatsocket', data=data)
-# print(json_response.text)
+bert_pro = Process()
+MAX_PROCESS = 1
 
 if __name__ == "__main__":
     demo("http://localhost:8888")
